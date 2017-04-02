@@ -3,6 +3,7 @@ package com.anysoftkeyboard.keyboards;
 import com.anysoftkeyboard.AnySoftKeyboardTestRunner;
 import com.anysoftkeyboard.api.KeyCodes;
 import com.anysoftkeyboard.keyboards.views.KeyDrawableStateProvider;
+import com.menny.android.anysoftkeyboard.AnyApplication;
 import com.menny.android.anysoftkeyboard.R;
 
 import org.junit.Assert;
@@ -46,7 +47,7 @@ public class ExternalAnyKeyboardTest {
 
     @Test
     public void testGeneralProperties() throws Exception {
-        AnyKeyboard keyboard = KeyboardFactory.getAllAvailableKeyboards(RuntimeEnvironment.application).get(0).createKeyboard(RuntimeEnvironment.application, Keyboard.KEYBOARD_ROW_MODE_NORMAL);
+        AnyKeyboard keyboard = AnyApplication.getKeyboardFactory(RuntimeEnvironment.application).getEnabledAddOn().createKeyboard(Keyboard.KEYBOARD_ROW_MODE_NORMAL);
         Assert.assertNotNull(keyboard);
         Assert.assertTrue(keyboard instanceof ExternalAnyKeyboard);
         Assert.assertEquals("en", keyboard.getDefaultDictionaryLocale());
@@ -58,7 +59,7 @@ public class ExternalAnyKeyboardTest {
 
     @Test
     public void testLoadedKeyboard() throws Exception {
-        AnyKeyboard keyboard = KeyboardFactory.getAllAvailableKeyboards(RuntimeEnvironment.application).get(0).createKeyboard(RuntimeEnvironment.application, Keyboard.KEYBOARD_ROW_MODE_NORMAL);
+        AnyKeyboard keyboard = AnyApplication.getKeyboardFactory(RuntimeEnvironment.application).getEnabledAddOn().createKeyboard(Keyboard.KEYBOARD_ROW_MODE_NORMAL);
         Assert.assertNotNull(keyboard);
         keyboard.loadKeyboard(SIMPLE_KeyboardDimens);
 
@@ -72,7 +73,7 @@ public class ExternalAnyKeyboardTest {
     @Test
     public void testDrawableState() throws Exception {
         //NOTE: this is used ONLY for the key's background drawable!
-        AnyKeyboard keyboard = KeyboardFactory.getAllAvailableKeyboards(RuntimeEnvironment.application).get(0).createKeyboard(RuntimeEnvironment.application, Keyboard.KEYBOARD_ROW_MODE_NORMAL);
+        AnyKeyboard keyboard = AnyApplication.getKeyboardFactory(RuntimeEnvironment.application).getEnabledAddOn().createKeyboard(Keyboard.KEYBOARD_ROW_MODE_NORMAL);
         Assert.assertNotNull(keyboard);
         keyboard.loadKeyboard(SIMPLE_KeyboardDimens);
 

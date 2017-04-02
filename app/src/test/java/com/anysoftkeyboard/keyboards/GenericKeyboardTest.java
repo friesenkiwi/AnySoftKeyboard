@@ -7,7 +7,7 @@ import com.anysoftkeyboard.addons.AddOn;
 import com.anysoftkeyboard.addons.DefaultAddOn;
 import com.anysoftkeyboard.ime.AnySoftKeyboardKeyboardTagsSearcher;
 import com.anysoftkeyboard.keyboardextensions.KeyboardExtension;
-import com.anysoftkeyboard.keyboardextensions.KeyboardExtensionFactory;
+import com.menny.android.anysoftkeyboard.AnyApplication;
 import com.menny.android.anysoftkeyboard.R;
 
 import org.junit.Assert;
@@ -30,9 +30,8 @@ public class GenericKeyboardTest {
         mContext = RuntimeEnvironment.application;
         mDefaultAddOn = new DefaultAddOn(mContext, mContext);
         mKeyboardDimens = new AnySoftKeyboardKeyboardTagsSearcher.SimpleKeyboardDimens();
-        mTopRow = KeyboardExtensionFactory.getAllAvailableExtensions(RuntimeEnvironment.application, KeyboardExtension.TYPE_TOP).get(0);
-        mBottomRow = KeyboardExtensionFactory.getCurrentKeyboardExtension(RuntimeEnvironment.application, KeyboardExtension.TYPE_BOTTOM);
-
+        mTopRow = AnyApplication.getTopRowFactory(mContext).getEnabledAddOn();
+        mBottomRow = AnyApplication.getBottomRowFactory(mContext).getEnabledAddOn();
     }
 
     @Test

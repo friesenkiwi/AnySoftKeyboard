@@ -3,7 +3,6 @@ package com.anysoftkeyboard;
 import android.content.res.Configuration;
 import android.view.inputmethod.EditorInfo;
 
-import com.anysoftkeyboard.keyboards.KeyboardAddOnAndBuilder;
 import com.anysoftkeyboard.keyboards.KeyboardSwitcher;
 import com.anysoftkeyboard.keyboards.views.AnyKeyboardView;
 import com.menny.android.anysoftkeyboard.R;
@@ -14,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.robolectric.RuntimeEnvironment;
 
+import static com.anysoftkeyboard.AnySoftKeyboard.PREFS_KEY_POSTFIX_OVERRIDE_DICTIONARY;
 import static com.anysoftkeyboard.keyboards.Keyboard.KEYBOARD_ROW_MODE_NORMAL;
 import static com.anysoftkeyboard.keyboards.Keyboard.KEYBOARD_ROW_MODE_PASSWORD;
 
@@ -165,11 +165,11 @@ public class AnySoftKeyboardKeyboardSwitcherTest extends AnySoftKeyboardBaseTest
     @Test
     public void testForceMakeKeyboardsOnAddOnsPrefChange() {
         Mockito.reset(mAnySoftKeyboardUnderTest.getSpiedKeyboardSwitcher());
-        SharedPrefsHelper.setPrefsValue(KeyboardAddOnAndBuilder.KEYBOARD_PREF_PREFIX + "test", false);
+        SharedPrefsHelper.ensureKeyboardAtIndexEnabled(1, true);
         Mockito.verify(mAnySoftKeyboardUnderTest.getSpiedKeyboardSwitcher(), Mockito.atLeastOnce()).flushKeyboardsCache();
         Mockito.verify(mAnySoftKeyboardUnderTest.getSpiedKeyboardSwitcher()).setInputView(Mockito.isNotNull(AnyKeyboardView.class));
         Mockito.reset(mAnySoftKeyboardUnderTest.getSpiedKeyboardSwitcher());
-        SharedPrefsHelper.setPrefsValue("dictionary_test", false);
+        SharedPrefsHelper.setPrefsValue("keyboard_id" + PREFS_KEY_POSTFIX_OVERRIDE_DICTIONARY, "dictionary_id");
         Mockito.verify(mAnySoftKeyboardUnderTest.getSpiedKeyboardSwitcher(), Mockito.atLeastOnce()).flushKeyboardsCache();
         Mockito.verify(mAnySoftKeyboardUnderTest.getSpiedKeyboardSwitcher()).setInputView(Mockito.isNotNull(AnyKeyboardView.class));
         Mockito.reset(mAnySoftKeyboardUnderTest.getSpiedKeyboardSwitcher());

@@ -51,6 +51,8 @@ import net.evendanan.pushingpixels.EdgeEffectHacker;
 
 import java.lang.ref.WeakReference;
 
+import static com.menny.android.anysoftkeyboard.AnyApplication.getKeyboardThemeFactory;
+
 public class MainSettingsActivity extends PermissionsFragmentChauffeurActivity {
 
     public static final String EXTRA_KEY_APP_SHORTCUT_ID = "shortcut_id";
@@ -181,14 +183,14 @@ public class MainSettingsActivity extends PermissionsFragmentChauffeurActivity {
 
     private void updateMenuExtraData() {
         TextView keyboardsData = (TextView) findViewById(R.id.keyboards_group_extra_data);
-        final int all = KeyboardFactory.getAllAvailableKeyboards(getApplicationContext()).size();
-        final int enabled = KeyboardFactory.getEnabledKeyboards(getApplicationContext()).size();
+        final int all = AnyApplication.getKeyboardFactory(getApplicationContext()).getAllAddOns().size();
+        final int enabled = AnyApplication.getKeyboardFactory(getApplicationContext()).getOrderedEnabledIds().size();
         keyboardsData.setText(getString(R.string.keyboards_group_extra_template, enabled, all));
 
         TextView themeData = (TextView) findViewById(R.id.theme_extra_data);
-        KeyboardTheme theme = KeyboardThemeFactory.getCurrentKeyboardTheme(getApplicationContext());
+        KeyboardTheme theme = getKeyboardThemeFactory(this).getEnabledAddOn();
         if (theme == null)
-            theme = KeyboardThemeFactory.getFallbackTheme(getApplicationContext());
+            theme = getKeyboardThemeFactory(this).getFallbackTheme();
         themeData.setText(getString(R.string.selected_add_on_summary, theme.getName()));
     }
 

@@ -30,8 +30,8 @@ import com.anysoftkeyboard.keyboards.AnyKeyboard;
 import com.anysoftkeyboard.keyboards.Keyboard;
 import com.anysoftkeyboard.keyboards.KeyboardDimens;
 import com.anysoftkeyboard.quicktextkeys.QuickTextKey;
-import com.anysoftkeyboard.quicktextkeys.QuickTextKeyFactory;
 import com.anysoftkeyboard.quicktextkeys.TagsExtractor;
+import com.menny.android.anysoftkeyboard.AnyApplication;
 import com.menny.android.anysoftkeyboard.R;
 
 import java.util.ArrayList;
@@ -66,14 +66,14 @@ public abstract class AnySoftKeyboardKeyboardTagsSearcher extends AnySoftKeyboar
             updateTagExtractor(sharedPreferences);
         } else if (mQuickKeyPluginsPrefKey.equals(key) && isQuickTextTagSearchEnabled()) {
             //forcing reload
-            setTagsSearcher(new TagsExtractor(this, extractKeysListListFromEnabledQuickText(QuickTextKeyFactory.getOrderedEnabledQuickKeys(getApplicationContext()))));
+            setTagsSearcher(new TagsExtractor(this, extractKeysListListFromEnabledQuickText(AnyApplication.getQuickTextKeyFactory(this).getOrderedEnabledAddOns())));
         }
     }
 
     private void updateTagExtractor(SharedPreferences sharedPreferences) {
         final boolean enabled = sharedPreferences.getBoolean(mTagExtractorPrefKey, mTagExtractorDefaultValue);
         if (enabled && mEmojiTagsSearcher == null) {
-            setTagsSearcher(new TagsExtractor(this, extractKeysListListFromEnabledQuickText(QuickTextKeyFactory.getOrderedEnabledQuickKeys(getApplicationContext()))));
+            setTagsSearcher(new TagsExtractor(this, extractKeysListListFromEnabledQuickText(AnyApplication.getQuickTextKeyFactory(this).getOrderedEnabledAddOns())));
         } else if (!enabled) {
             setTagsSearcher(null);
         }

@@ -9,7 +9,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethod;
 
 import com.anysoftkeyboard.api.KeyCodes;
-import com.anysoftkeyboard.keyboards.KeyboardFactory;
 import com.menny.android.anysoftkeyboard.R;
 
 import org.junit.After;
@@ -30,11 +29,7 @@ public class AnySoftKeyboardKeyboardPersistentLayoutTest {
     public void setUp() throws Exception {
         RuntimeEnvironment.application.getResources().getConfiguration().keyboard = Configuration.KEYBOARD_NOKEYS;
         //enabling the second english keyboard
-        Assert.assertEquals(1, KeyboardFactory.getEnabledKeyboards(RuntimeEnvironment.application).size());
-        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RuntimeEnvironment.application);
-        final SharedPreferences.Editor editor = sharedPreferences.edit().putBoolean("keyboard_12335055-4aa6-49dc-8456-c7d38a1a5123", true);
-        SharedPreferencesCompat.EditorCompat.getInstance().apply(editor);
-        Assert.assertEquals(2, KeyboardFactory.getEnabledKeyboards(RuntimeEnvironment.application).size());
+        SharedPrefsHelper.ensureKeyboardAtIndexEnabled(1, true);
         //starting service
         mAnySoftKeyboardController = Robolectric.buildService(TestableAnySoftKeyboard.class);
         mAnySoftKeyboardUnderTest = mAnySoftKeyboardController.attach().create().get();

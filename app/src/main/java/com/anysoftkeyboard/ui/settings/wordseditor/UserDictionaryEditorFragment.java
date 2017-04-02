@@ -54,6 +54,7 @@ import com.anysoftkeyboard.keyboards.KeyboardAddOnAndBuilder;
 import com.anysoftkeyboard.keyboards.KeyboardFactory;
 import com.anysoftkeyboard.ui.settings.MainSettingsActivity;
 import com.anysoftkeyboard.utils.Logger;
+import com.menny.android.anysoftkeyboard.AnyApplication;
 import com.menny.android.anysoftkeyboard.R;
 
 import net.evendanan.chauffeur.lib.FragmentChauffeurActivity;
@@ -69,41 +70,25 @@ import java.util.List;
 public class UserDictionaryEditorFragment extends Fragment
         implements AsyncTaskWithProgressWindow.AsyncTaskOwner, EditorWordsAdapter.DictionaryCallbacks {
 
-    public static class LoadedWord {
-        public final String word;
-        public final int freq;
-
-        public LoadedWord(String word, int freq) {
-            this.word = word;
-            this.freq = freq;
-        }
-    }
-
-    private Dialog mDialog;
-
-    private static final String ASK_USER_WORDS_SDCARD_FILENAME = "UserWords.xml";
-
     static final int DIALOG_SAVE_SUCCESS = 10;
     static final int DIALOG_SAVE_FAILED = 11;
-
     static final int DIALOG_LOAD_SUCCESS = 20;
     static final int DIALOG_LOAD_FAILED = 21;
-
     static final String TAG = "ASK_UDE";
-
-    private Spinner mLanguagesSpinner;
-
-    private String mSelectedLocale = null;
-    private EditableDictionary mCurrentDictionary;
-
-    private RecyclerView mWordsRecyclerView;
-
+    private static final String ASK_USER_WORDS_SDCARD_FILENAME = "UserWords.xml";
     private static final Comparator<LoadedWord> msWordsComparator = new Comparator<LoadedWord>() {
         @Override
         public int compare(LoadedWord lhs, LoadedWord rhs) {
             return lhs.word.compareTo(rhs.word);
         }
     };
+    private Dialog mDialog;
+    private Spinner mLanguagesSpinner;
+
+    private String mSelectedLocale = null;
+    private EditableDictionary mCurrentDictionary;
+
+    private RecyclerView mWordsRecyclerView;
     private final OnItemSelectedListener mSpinnerItemSelectedListener = new OnItemSelectedListener() {
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             mSelectedLocale = ((DictionaryLocale) arg0.getItemAtPosition(arg2)).getLocale();
@@ -230,7 +215,7 @@ public class UserDictionaryEditorFragment extends Fragment
             protected Void doAsyncTask(Void[] params) throws Exception {
                 ArrayList<DictionaryLocale> languagesList = new ArrayList<>();
 
-                List<KeyboardAddOnAndBuilder> keyboards = KeyboardFactory.getEnabledKeyboards(getActivity().getApplicationContext());
+                List<KeyboardAddOnAndBuilder> keyboards = AnyApplication.getKeyboardFactory(getActivity()).getOrderedEnabledAddOns();
                 for (KeyboardAddOnAndBuilder kbd : keyboards) {
                     String locale = kbd.getKeyboardLocale();
                     if (TextUtils.isEmpty(locale))
@@ -314,7 +299,7 @@ public class UserDictionaryEditorFragment extends Fragment
             protected Void doAsyncTask(Void[] params) throws Exception {
                 mCurrentDictionary = mNewDictionary;
                 mCurrentDictionary.loadDictionary();
-                mWordsList = ((MyEditableDictionary)mCurrentDictionary).getLoadedWords();
+                mWordsList = ((MyEditableDictionary) mCurrentDictionary).getLoadedWords();
                 //now, sorting the word list alphabetically
                 Collections.sort(mWordsList, msWordsComparator);
                 return null;
@@ -386,6 +371,21 @@ public class UserDictionaryEditorFragment extends Fragment
         }.execute();
     }
 
+    protected interface MyEditableDictionary {
+        @NonNull
+        List<LoadedWord> getLoadedWords();
+    }
+
+    public static class LoadedWord {
+        public final String word;
+        public final int freq;
+
+        public LoadedWord(String word, int freq) {
+            this.word = word;
+            this.freq = freq;
+        }
+    }
+
     private static class MarginDecoration extends RecyclerView.ItemDecoration {
         private final int mMargin;
 
@@ -437,11 +437,6 @@ public class UserDictionaryEditorFragment extends Fragment
         }
     }
 
-    protected interface MyEditableDictionary {
-        @NonNull
-        List<LoadedWord> getLoadedWords();
-    }
-
     private static class MyUserDictionary extends UserDictionary implements MyEditableDictionary {
 
         public MyUserDictionary(Context context, String locale) {
@@ -451,7 +446,7 @@ public class UserDictionaryEditorFragment extends Fragment
         @NonNull
         @Override
         public List<LoadedWord> getLoadedWords() {
-            return ((MyEditableDictionary)super.getActualDictionary()).getLoadedWords();
+            return ((MyEditableDictionary) super.getActualDictionary()).getLoadedWords();
         }
 
         @NonNull
@@ -495,7 +490,7 @@ public class UserDictionaryEditorFragment extends Fragment
             return mLoadedWords;
         }
     }
-    
+
     private static class MyAndroidUserDictionary extends AndroidUserDictionary implements MyEditableDictionary {
 
         @NonNull
